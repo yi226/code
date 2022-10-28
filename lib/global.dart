@@ -17,12 +17,20 @@ class Global extends ChangeNotifier {
     notifyListeners();
   }
 
+  double _sideWidth = 50;
+  double get sideWidth => _sideWidth;
+  set sideWidth(double width) {
+    _sideWidth = width;
+    notifyListeners();
+  }
+
   final Map<String, Tab> _tabMap = {};
   Map<String, Tab> get tabMap => _tabMap;
-  addTab(Map<String, Tab> tab){
+  addTab(Map<String, Tab> tab) {
     _tabMap.addAll(tab);
     notifyListeners();
   }
+
   removeTab(String label) {
     _tabMap.remove(label);
     notifyListeners();

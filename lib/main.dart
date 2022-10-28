@@ -2,6 +2,7 @@ import 'package:code/screen/editor.dart';
 import 'package:code/screen/home.dart';
 import 'package:code/screen/setting.dart';
 import 'package:code/global.dart';
+import 'package:code/utils/mypane.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
@@ -25,21 +26,40 @@ class App extends StatelessWidget {
           themeMode: mode,
           title: 'Code',
           initialRoute: '/',
-          routes: {'/': ((context) => const HomePage())},
+          routes: {'/': ((context) => const MainPage())},
         );
       },
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    final double sideWidth =
+        context.select<Global, double>((value) => value.sideWidth);
+    return NavigationView(
+      appBar: const NavigationAppBar(leading: Icon(FluentIcons.a_a_d_logo)),
+      content: Row(
+        children: [
+          SizedBox(width: sideWidth, child: const SideWidget()),
+          const Expanded(child: Editor()),
+        ],
+      ),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class SideWidget extends StatefulWidget {
+  const SideWidget({super.key});
+
+  @override
+  State<SideWidget> createState() => _SideWidgetState();
+}
+
+class _SideWidgetState extends State<SideWidget> {
   int? topIndex;
   // final Editor _editor = const Editor(key: ValueKey(0));
 
@@ -51,33 +71,27 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
-        actions: CommandBarCard(
-          margin: const EdgeInsets.only(left: 50),
-          child: CommandBar(
-            primaryItems: [
-              CommandBarButton(
-                icon: const Icon(FluentIcons.file_code),
-                label: const Text('文件'),
-                onPressed: () {},
-              )
-            ],
-          ),
-        ),
-      ),
-      pane: NavigationPane(
+      pane: MyPane(
         selected: topIndex,
         displayMode: PaneDisplayMode.compact,
         indicator: const StickyNavigationIndicator(
           duration: Duration(milliseconds: 200),
         ),
-        onChanged: (index) => setState(() => topIndex = index),
+        onChanged: (index) => setState(() {
+          if (index == topIndex) {
+            topIndex = null;
+            context.read<Global>().sideWidth = 50;
+          } else {
+            topIndex = index;
+            context.read<Global>().sideWidth = 350;
+          }
+        }),
+        menuButton: Container(),
         items: [
           PaneItem(
             icon: const Icon(FluentIcons.home),
             title: const Text('Home'),
-            body: const Editor(),
+            body: const Home(),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.issue_tracking),
