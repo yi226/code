@@ -24,6 +24,13 @@ class Global extends ChangeNotifier {
     notifyListeners();
   }
 
+  int _currentIndex = 0;
+  int get currentIndex => _currentIndex;
+  set currentIndex(int index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
+
   final Map<String, Tab> _tabMap = {};
   Map<String, Tab> get tabMap => _tabMap;
   addTab(Map<String, Tab> tab) {
@@ -32,6 +39,9 @@ class Global extends ChangeNotifier {
   }
 
   removeTab(String label) {
+    if (_tabMap.keys.toList().indexOf(label) == _currentIndex) {
+      _currentIndex = 0;
+    }
     _tabMap.remove(label);
     notifyListeners();
   }

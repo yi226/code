@@ -26,8 +26,8 @@ class _EditorState extends State<Editor> {
   Widget build(BuildContext context) {
     final global = context.watch<Global>();
     return TabView(
-      currentIndex: currentIndex,
-      onChanged: (value) => setState(() => currentIndex = value),
+      currentIndex: global.currentIndex,
+      onChanged: (value) => global.currentIndex = value,
       onNewPressed: () => global.addTab({
         '/new': Tab(
             text: const Text('new*'),
