@@ -1,6 +1,7 @@
+import 'package:code/screen/editor.dart';
 import 'package:code/screen/home.dart';
 import 'package:code/screen/setting.dart';
-import 'package:code/theme.dart';
+import 'package:code/global.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
@@ -15,13 +16,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
+      create: (_) => Global(),
       builder: (context, child) {
-        final appTheme = context.watch<AppTheme>();
+        final mode = context.select<Global, ThemeMode>((value) => value.mode);
         return FluentApp(
           debugShowCheckedModeBanner: false,
           darkTheme: ThemeData.dark(),
-          themeMode: appTheme.mode,
+          themeMode: mode,
           title: 'Code',
           initialRoute: '/',
           routes: {'/': ((context) => const HomePage())},
@@ -40,30 +41,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int? topIndex;
+  // final Editor _editor = const Editor(key: ValueKey(0));
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = context.watch<AppTheme>();
     return NavigationView(
       appBar: NavigationAppBar(
-        title: const Text('Code'),
         automaticallyImplyLeading: false,
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
-            child: ToggleSwitch(
-              content: const Text('Dark Mode'),
-              checked: FluentTheme.of(context).brightness.isDark,
-              onChanged: (v) {
-                if (v) {
-                  appTheme.mode = ThemeMode.dark;
-                } else {
-                  appTheme.mode = ThemeMode.light;
-                }
-              },
-            ),
+        actions: CommandBarCard(
+          margin: const EdgeInsets.only(left: 50),
+          child: CommandBar(
+            primaryItems: [
+              CommandBarButton(
+                icon: const Icon(FluentIcons.file_code),
+                label: const Text('文件'),
+                onPressed: () {},
+              )
+            ],
           ),
-        ]),
+        ),
       ),
       pane: NavigationPane(
         selected: topIndex,
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           PaneItem(
             icon: const Icon(FluentIcons.home),
             title: const Text('Home'),
-            body: const Home(),
+            body: const Editor(),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.issue_tracking),
