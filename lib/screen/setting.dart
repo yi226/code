@@ -10,10 +10,7 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  final themes = ["xcode", "tomorrow", "tomorrowNight", "monokaiSublime"];
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +18,36 @@ class _SettingState extends State<Setting> {
     return Column(
       children: [
         Expander(
-            header: const Text('主题'),
+            header: const Text('全局主题'),
             initiallyExpanded: true,
             content: Row(
-              children: List.generate(3, (index) {
+                children: List.generate(3, (index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RadioButton(
+                    content: Text(ThemeMode.values[index].name),
+                    checked: global.mode.index == index,
+                    onChanged: (checked) {
+                      if (checked) {
+                        global.mode = ThemeMode.values[index];
+                      }
+                    }),
+              );
+            }))),
+        Expander(
+            header: const Text('代码主题'),
+            initiallyExpanded: true,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(themes.length, (index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RadioButton(
-                      content: Text(ThemeMode.values[index].name),
-                      checked: global.mode.index == index,
+                      content: Text(themes[index]),
+                      checked: global.codeTheme == index,
                       onChanged: (checked) {
                         if (checked) {
-                          setState(
-                              () => global.mode = ThemeMode.values[index]);
+                          global.codeTheme = index;
                         }
                       }),
                 );

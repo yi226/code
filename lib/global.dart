@@ -24,6 +24,13 @@ class Global extends ChangeNotifier {
     notifyListeners();
   }
 
+  int _codeTheme = 0;
+  int get codeTheme  => _codeTheme;
+  set codeTheme(int theme){
+    _codeTheme = theme;
+    notifyListeners();
+  }
+
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
   set currentIndex(int index) {

@@ -1,15 +1,16 @@
 import 'package:code/global.dart';
+import 'package:code/widget/codeeditor.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 
-class Editor extends StatefulWidget {
-  const Editor({super.key});
+class EditorTab extends StatefulWidget {
+  const EditorTab({super.key});
 
   @override
-  State<Editor> createState() => _EditorState();
+  State<EditorTab> createState() => _EditorTabState();
 }
 
-class _EditorState extends State<Editor> {
+class _EditorTabState extends State<EditorTab> {
   int currentIndex = 0;
 
   @override
@@ -31,7 +32,7 @@ class _EditorState extends State<Editor> {
       onNewPressed: () => global.addTab({
         '/new': Tab(
             text: const Text('new*'),
-            body: const FlutterLogo(),
+            body: const CodeEditor(),
             onClosed: () => global.removeTab('/new'))
       }),
       tabs: global.tabMap.values.toList(),

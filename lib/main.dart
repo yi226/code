@@ -45,7 +45,7 @@ class MainPage extends StatelessWidget {
       content: Row(
         children: [
           SizedBox(width: sideWidth, child: const SideWidget()),
-          const Expanded(child: Editor()),
+          const Expanded(child: EditorTab()),
         ],
       ),
     );
@@ -61,13 +61,6 @@ class SideWidget extends StatefulWidget {
 
 class _SideWidgetState extends State<SideWidget> {
   int? topIndex;
-  // final Editor _editor = const Editor(key: ValueKey(0));
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return NavigationView(
