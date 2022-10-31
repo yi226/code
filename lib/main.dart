@@ -38,13 +38,25 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double sideWidth =
-        context.select<Global, double>((value) => value.sideWidth);
+    final global = context.watch<Global>();
     return NavigationView(
-      appBar: const NavigationAppBar(leading: Icon(FluentIcons.a_a_d_logo)),
+      appBar: NavigationAppBar(
+        leading: const Icon(FluentIcons.a_a_d_logo),
+        actions: CommandBarCard(
+          margin: const EdgeInsets.only(left: 50),
+          child: CommandBar(
+            primaryItems: [
+              CommandBarButton(
+                label: const Text("文件(F)"),
+                onPressed: () => global.getFilePath(),
+              )
+            ],
+          ),
+        ),
+      ),
       content: Row(
         children: [
-          SizedBox(width: sideWidth, child: const SideWidget()),
+          SizedBox(width: global.sideWidth, child: const SideWidget()),
           const Expanded(child: EditorTab()),
         ],
       ),
@@ -84,7 +96,7 @@ class _SideWidgetState extends State<SideWidget> {
           PaneItem(
             icon: const Icon(FluentIcons.home),
             title: const Text('Home'),
-            body: const Home(),
+            body: const Home(key: ValueKey(1)),
           ),
           PaneItem(
             icon: const Icon(FluentIcons.issue_tracking),

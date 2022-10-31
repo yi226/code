@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 class Global extends ChangeNotifier {
   Global() {
@@ -8,6 +10,7 @@ class Global extends ChangeNotifier {
           body: const FlutterLogo(),
           onClosed: () => removeTab('/'))
     });
+    getFilePathFunction = getFilePath;
   }
 
   ThemeMode _mode = ThemeMode.system;
@@ -25,8 +28,8 @@ class Global extends ChangeNotifier {
   }
 
   int _codeTheme = 0;
-  int get codeTheme  => _codeTheme;
-  set codeTheme(int theme){
+  int get codeTheme => _codeTheme;
+  set codeTheme(int theme) {
     _codeTheme = theme;
     notifyListeners();
   }
@@ -46,10 +49,32 @@ class Global extends ChangeNotifier {
   }
 
   removeTab(String label) {
-    if (_tabMap.keys.toList().indexOf(label) == _currentIndex) {
-      _currentIndex = 0;
+    if (_tabMap.keys.toList().indexOf(label) <= _currentIndex) {
+      _currentIndex = _currentIndex - 1;
     }
     _tabMap.remove(label);
+    if (_tabMap.isEmpty) {
+      _currentIndex = 0;
+    }
     notifyListeners();
+  }
+
+  String? _filePath;
+  String? get filePath => _filePath;
+  set filePath(String? filePath) {
+    _filePath = filePath;
+    notifyListeners();
+  }
+
+  Function? getFilePathFunction;
+
+  getFilePath() async {
+    final selectPath = await FilePicker.platform.getDirectoryPath();
+    if (selectPath != null) {
+      filePath = selectPath;
+    }
+    if (kDebugMode) {
+      print(_filePath);
+    }
   }
 }
